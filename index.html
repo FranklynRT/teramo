@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Romántica</title>
+    <style>
+        /* General body styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffe6f2; /* Soft pink background */
+            color: #e91e63; /* Main text color (strong pink) */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically centers content */
+            align-items: center; /* Horizontally centers content */
+            min-height: 100vh; /* Minimum height of the viewport */
+            overflow-x: hidden; /* Prevents horizontal scroll */
+        }
+
+        /* Romantic background image */
+        .romantic-background {
+            position: fixed; /* Fixes the image to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Sends the image to the background */
+            opacity: 0.7; /* Sets opacity for subtlety */
+        }
+
+        .romantic-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image covers space without distortion */
+            object-position: center; /* Centers the image within its container */
+        }
+
+        /* Main content container for question and buttons */
+        .sticky-element {
+            background-color: #f48fb1; /* Box background color (lighter pink) */
+            color: white; /* Text color inside the box */
+            padding: 30px 40px;
+            border-radius: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Shadow for depth */
+            z-index: 1000; /* Ensures it's above the background */
+            text-align: center;
+            animation: pulse 1.5s infinite alternate; /* Pulsing animation */
+            max-width: 90%; /* Limits width on larger screens */
+            box-sizing: border-box; /* Includes padding in width calculation */
+            position: relative; /* For absolute positioning of messages */
+        }
+
+        .sticky-element p#question-text {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        /* Message container for "No" button interactions */
+        .sticky-element .messages-container {
+            position: absolute;
+            top: -100px; /* Positions above the main box */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            text-align: center;
+            font-size: 1.2em;
+            color: white; /* Messages in white */
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Shadow for readability */
+        }
+
+        /* Button styles */
+        .sticky-element button {
+            background-color: #ff4081; /* Vibrant button color */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, font-size 0.3s ease, padding 0.3s ease; /* Smooth transitions for interactivity */
+            margin: 0 10px;
+            min-width: 120px;
+        }
+
+        .sticky-element button:hover {
+            background-color: #e91e63; /* Color on hover */
+            transform: scale(1.05); /* Slight scale effect on hover */
+        }
+
+        /* Responsive adjustments for mobile devices */
+        @media (max-width: 600px) {
+            .sticky-element {
+                padding: 20px 25px;
+            }
+
+            .sticky-element p#question-text {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .sticky-element button {
+                font-size: 1em;
+                padding: 12px 25px;
+                margin: 5px auto; /* Centers buttons and stacks them */
+                display: block; /* Each button on its own line */
+                width: calc(100% - 10px); /* Occupies almost full available width */
+            }
+
+            .sticky-element .messages-container {
+                font-size: 1em;
+                top: -80px; /* Adjust message position for mobile */
+                width: 95%;
+            }
+        }
+
+        /* Pulsing animation for the main box */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="romantic-background">
+        <img src="cora.png" alt="Fondo Romántico">
+    </div>
+
+    <div class="sticky-element">
+        <form id="proposalForm">
+            <div class="messages-container" id="messagesContainer"></div>
+            <p id="question-text">¿Quieres ser mi novia?</p>
+            <button type="button" name="respuesta" value="si" id="yesButton">¡Sí!</button>
+            <button type="button" name="respuesta" value="no" id="noButton">No</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const noButton = document.getElementById('noButton');
+            const yesButton = document.getElementById('yesButton');
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            let noClickCount = 0;
+            const messages = [
+                "¿Estás segura? Piensa bien.",
+                "¡Ay! Sé que me quieres. ❤️",
+                "¡Por favor, di que sí! Eres importante para mí. ✨",
+                "Mi vida no sería igual sin ti. ¡Te necesito! 🥺",
+                "Cada día contigo es un regalo. No me dejes solo. 😭",
+                "No hay nadie que me haga sentir tan feliz como tú. ¡Solo di sí! 🙏",
+                "¡No me rompas el corazón! Estoy enamorado de ti. 💔",
+                "Vamos, solo dilo... sabes que quieres decir que sí. 😉",
+                "¡Por favor, no me hagas rogar! Mi afecto por ti es infinito. 💞",
+                "¡No puedo vivir sin tu sonrisa! Por favor, di que sí. 😊"
+            ];
+
+            // No need for sendNoResponseToDB() if there's no PHP backend for saving.
+            // The "No" button will now only update the UI.
+
+            // Event listener for the "No" button
+            noButton.addEventListener('click', function(event) {
+                // No event.preventDefault() needed if form type isn't submit or no action.
+
+                // Display a different message each time
+                const message = messages[noClickCount % messages.length];
+                messagesContainer.textContent = message;
+
+                // Increase the size of the "Yes" button
+                let currentYesFontSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+                let currentYesPaddingX = parseFloat(window.getComputedStyle(yesButton).paddingLeft);
+                let currentYesPaddingY = parseFloat(window.getComputedStyle(yesButton).paddingTop);
+
+                yesButton.style.fontSize = (currentYesFontSize * 1.1) + 'px';
+                yesButton.style.padding = (currentYesPaddingY * 1.1) + 'px ' + (currentYesPaddingX * 1.1) + 'px';
+                
+                yesButton.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    yesButton.style.transform = 'scale(1)';
+                }, 200);
+
+                noClickCount++;
+
+                if (noClickCount >= messages.length * 2) {
+                    noButton.textContent = "¡Ya no hay escape! 😉";
+                    // noButton.disabled = true; // Uncomment this line to disable the "No" button after many clicks
+                }
+            });
+
+            // Event listener for the "Yes" button (now handles redirection with JS)
+            yesButton.addEventListener('click', function() {
+                // Redirect directly to dijiste_si.html using JavaScript
+                window.location.href = 'dijiste_si.html';
+            });
+        });
+    </script>
+</body>
+</html>

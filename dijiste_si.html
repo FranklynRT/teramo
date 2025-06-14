@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Dijiste que sí! 🥰</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #ffe6f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #c2185b;
+            overflow: hidden;
+            position: relative;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            position: relative;
+        }
+        .mensaje {
+            font-size: 1.8em;
+            margin-top: 20px;
+            color: #e91e63;
+            font-weight: bold;
+            z-index: 1;
+            position: relative;
+        }
+        img {
+            margin-top: 40px;
+            width: 300px;
+            max-width: 90%;
+            border-radius: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+            z-index: 1;
+            position: relative;
+        }
+        img:hover {
+            transform: scale(1.03);
+        }
+
+        /* Animación de corazones flotantes */
+        .heart-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+            background-color: transparent;
+        }
+        .heart {
+            position: absolute;
+            background-color: #ff69b4;
+            transform: rotate(-45deg);
+            animation: floatHeart 10s infinite ease-in-out;
+            opacity: 0;
+        }
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ff69b4;
+            border-radius: 50%;
+        }
+        .heart:before {
+            top: -50%;
+            left: 0;
+        }
+        .heart:after {
+            top: 0;
+            left: 50%;
+        }
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) rotate(-45deg) scale(0.8); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-50px) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            .mensaje {
+                font-size: 1.4em;
+            }
+            img {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart-animation"></div>
+
+    <h1>¡Dijiste que sí! 💖</h1>
+    <div class="mensaje">Ay mi niña linda, mi María hermosa. ¡Te amo muchísimo! 😍</div>
+    <img src="15.png" alt="Un momento romántico">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartAnimation = document.querySelector('.heart-animation');
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.width = Math.random() * 20 + 10 + 'px';
+                heart.style.height = heart.style.width;
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = Math.random() * 5 + 7 + 's';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                heartAnimation.appendChild(heart);
+
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+
+            setInterval(createHeart, 200);
+        });
+    </script>
+</body>
+</html>
